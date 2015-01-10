@@ -1,0 +1,6 @@
+library(data.table)
+dtime <- difftime(as.POSIXct("2007-02-03"), as.POSIXct("2007-02-01"),units="mins")
+rowsToRead <- as.numeric(dtime)
+DT <- fread("household_power_consumption.txt", skip="1/2/2007", nrows = rowsToRead, na.strings = c("?", ""))
+plot(DT$V3 ~ as.numeric(difftime(strptime(paste(DT$V1,DT$V2),format="%d/%m/%Y %H:%M:%S"),as.POSIXct("2007-02-01"))),type="l",xlab="",ylab="Global Active Power (kilowatts)",xaxt="n")
+axis(side=1,at=c(0,86400,172800),labels=c('Thu','Fri','Sat'))

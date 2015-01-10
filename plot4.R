@@ -1,0 +1,20 @@
+library(data.table)
+dtime <- difftime(as.POSIXct("2007-02-03"), as.POSIXct("2007-02-01"),units="mins")
+rowsToRead <- as.numeric(dtime)
+DT <- fread("household_power_consumption.txt", skip="1/2/2007", nrows = rowsToRead, na.strings = c("?", ""))
+DT[,min:=as.numeric(difftime(strptime(paste(DT$V1,DT$V2),format="%d/%m/%Y %H:%M:%S"),as.POSIXct("2007-02-01")))/60]
+par(mfrow=c(2,2),mar=c(4,4,1,1),oma=c(1,0,1,0))
+with(DT,{
+  plot(V3 ~ min,type="l",xlab="",ylab="Global Active Power",xaxt="n",col='black')
+  axis(side=1,at=c(0,1440,2880),labels=c('Thu','Fri','Sat'))
+  plot(V5 ~ min,type="l",xlab="datetime",ylab="Voltage",xaxt="n",col='black')
+  axis(side=1,at=c(0,1440,2880),labels=c('Thu','Fri','Sat'))
+  plot(V7 ~ min,type="l",xlab="",ylab="Energy sub metering",xaxt="n",col='black')
+  lines(V8 ~ min,col='red')
+  lines(V9 ~ min,col='blue')
+  axis(side=1,at=c(0,1440,2880),labels=c('Thu','Fri','Sat'))
+  legend("top",lwd=1,box.lwd=0,cex=0.7,col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"))
+  plot(V4 ~ min,type="l",xlab="datetime",ylab="Global_reactive_power",xaxt="n",col='black')
+  axis(side=1,at=c(0,1440,2880),labels=c('Thu','Fri','Sat'))
+})
+

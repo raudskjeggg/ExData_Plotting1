@@ -1,0 +1,10 @@
+library(data.table)
+dtime <- difftime(as.POSIXct("2007-02-03"), as.POSIXct("2007-02-01"),units="mins")
+rowsToRead <- as.numeric(dtime)
+DT <- fread("household_power_consumption.txt", skip="1/2/2007", nrows = rowsToRead, na.strings = c("?", ""))
+DT[,min:=as.numeric(difftime(strptime(paste(DT$V1,DT$V2),format="%d/%m/%Y %H:%M:%S"),as.POSIXct("2007-02-01")))/60]
+plot(DT$V7 ~ DT$min,type="l",xlab="",ylab="Energy sub metering",xaxt="n",col='black')
+lines(DT$V8 ~ DT$min,col='red')
+lines(DT$V9 ~ DT$min,col='blue')
+axis(side=1,at=c(0,1440,2880),labels=c('Thu','Fri','Sat'))
+legend("topright",lwd=1, col = c("black", "red", "blue"), legend = c("Sub_metering_1", "Sub_metering_2","Sub_metering_3"))

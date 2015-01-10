@@ -1,0 +1,5 @@
+library(data.table)
+dtime <- difftime(as.POSIXct("2007-02-03"), as.POSIXct("2007-02-01"),units="mins")
+rowsToRead <- as.numeric(dtime)
+DT <- fread("household_power_consumption.txt", skip="1/2/2007", nrows = rowsToRead, na.strings = c("?", ""))
+hist(DT$V3,xlab="Global Active Power (kilowatts)",main="Global Active Power", col='red')
